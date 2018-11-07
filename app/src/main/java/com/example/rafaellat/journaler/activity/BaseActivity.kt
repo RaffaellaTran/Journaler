@@ -1,23 +1,23 @@
-package com.example.rafaellat.journaler
+package com.example.rafaellat.journaler.activity
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.PersistableBundle
+import android.support.v4.app.FragmentActivity
 import android.util.Log
+import com.example.rafaellat.journaler.R
+import kotlinx.android.synthetic.main.activity_header.*
 
-class MainActivity : AppCompatActivity() {
+abstract class BaseActivity: FragmentActivity() {
 
-    private val tag= Journaler.tag
+    protected abstract val tag: String
+    protected abstract fun getLayout(): Int
+    protected abstract fun getActivityTitle(): Int
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        Log.v(tag, "[ ON CREATE 1]")
-    }
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
-        setContentView(R.layout.activity_main)
-        Log.v(tag, "[ ON CREATE 2]")
+        setContentView(getLayout())
+        activity_title.setText(getActivityTitle())
+        Log.v(tag, "[ ON CREATE]")
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -45,6 +45,7 @@ class MainActivity : AppCompatActivity() {
         Log.v(tag, "[ ON POST RESUME ]")
     }
 
+
     override fun onPause() {
         super.onPause()
         Log.v(tag, "[ ON PAUSE ]")
@@ -59,4 +60,5 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
         Log.v(tag, "[ ON DESTROY ]")
     }
+
 }
