@@ -1,13 +1,13 @@
 package com.example.rafaellat.journaler.activity
 
 import android.os.Bundle
-import android.os.PersistableBundle
-import android.support.v4.app.FragmentActivity
+import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.Menu
 import com.example.rafaellat.journaler.R
-import kotlinx.android.synthetic.main.activity_header.*
+import kotlinx.android.synthetic.main.activity_main.*
 
-abstract class BaseActivity: FragmentActivity() {
+abstract class BaseActivity : AppCompatActivity() {
 
     protected abstract val tag: String
     protected abstract fun getLayout(): Int
@@ -16,8 +16,14 @@ abstract class BaseActivity: FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(getLayout())
-        activity_title.setText(getActivityTitle())
+        setSupportActionBar(toolbar)
         Log.v(tag, "[ ON CREATE]")
+    }
+
+    // assign a menu to the application bar
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main, menu)
+        return true
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {

@@ -7,8 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
-abstract class BaseFragment: Fragment() {
-    protected abstract val logTag : String
+abstract class BaseFragment : Fragment() {
+    protected abstract val logTag: String
     protected abstract fun getLayout(): Int
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

@@ -1,9 +1,29 @@
 package com.example.rafaellat.journaler.activity
 
+import android.app.Activity
+import android.os.Bundle
+import android.util.Log
 import com.example.rafaellat.journaler.R
+import com.example.rafaellat.journaler.model.MODE
 
-abstract class ItemActivity: BaseActivity() {
+abstract class ItemActivity : BaseActivity() {
 
-    override fun getActivityTitle()= R.string.app_name
+    protected var mode = MODE.VIEW
+    protected var success = Activity.RESULT_CANCELED
+    override fun getActivityTitle() = R.string.app_name
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val data = intent.extras
+        data?.let {
+            val modeToSet = data.getInt(MODE.EXTRAS_KEY, MODE.VIEW.mode)
+            mode = MODE.getByValue(modeToSet)
+        }
+        Log.v(tag, "Mode [ $mode ]")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        setResult(success)
+    }
 }

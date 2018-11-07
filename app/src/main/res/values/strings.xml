@@ -2,8 +2,14 @@
     <string name="app_name">Journaler</string>
     <string name="your_notes_content_go_here">your notes content go here</string>
     <string name="title">title</string>
+    <string name="todos">TODOS</string>
+    <string name="notes">Notes</string>
+    <string name="today">Today</string>
+    <string name="next_seven_days">Next seven days</string>
     <string name="your_note_content_goes_here">your note content goes here</string>
     <string name="pick_time">pick time</string>
     <string name="pick_a_date">pick a date</string>
     <string name="lorem_ipsum_sit_dolore">lorem ipsum sit dolore</string>
+    <string name="menu">menu</string>
+    <string name="choose_a_type">Choose a type:</string>
 </resources>
