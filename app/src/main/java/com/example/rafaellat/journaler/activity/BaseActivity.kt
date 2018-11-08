@@ -1,19 +1,24 @@
 package com.example.rafaellat.journaler.activity
 
+import android.Manifest
 import android.app.Activity
+import android.content.pm.PackageManager
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import com.example.rafaellat.journaler.R
+import com.example.rafaellat.journaler.permission.PermissionCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.*
 
-abstract class BaseActivity : AppCompatActivity() {
 
-//    companion object {
+abstract class BaseActivity : PermissionCompatActivity() {
+
+    companion object {
+        val REQUEST_GPS = 0 // ID for the request
 //        private var fontExoBold: Typeface? = null
 //        private var fontExoRegular: Typeface? = null
 //
@@ -61,8 +66,7 @@ abstract class BaseActivity : AppCompatActivity() {
 //                }
 //            }
 //        }
-//    }
-
+    }
 
     protected abstract val tag: String
     protected abstract fun getLayout(): Int
@@ -73,8 +77,22 @@ abstract class BaseActivity : AppCompatActivity() {
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
         setContentView(getLayout())
         setSupportActionBar(toolbar)
+        // requestGpsPermissions() //permission request for the ID defined
+        requestPermissions(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        )
         Log.v(tag, "[ ON CREATE]")
     }
+
+//    private fun requestGpsPermissions() {
+//        ActivityCompat.requestPermissions(
+//            this@BaseActivity, arrayOf(
+//                Manifest.permission.ACCESS_FINE_LOCATION,
+//                Manifest.permission.ACCESS_COARSE_LOCATION
+//            ), REQUEST_GPS
+//        )
+//    }
 
     // assign a menu to the application bar
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -85,7 +103,7 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
         Log.v(tag, "[ ON POST CREATE ]")
-        //  applyFonts()
+        // applyFonts()
     }
 
     override fun onRestart() {
@@ -128,6 +146,22 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         Log.v(tag, "[ ON DESTROY ]")
+    }
+
+    //result for the request
+    override fun onRequestPermissionsResult(
+        requestCode:
+        Int, permissions: Array<String>, grantResults: IntArray
+    ) {
+        if (requestCode == REQUEST_GPS) {
+            for (grantResult in grantResults) {
+                if (grantResult == PackageManager.PERMISSION_GRANTED) {
+                    Log.i(tag, String.format(Locale.ENGLISH, "Permission granted [ %d ]", requestCode))
+                } else {
+                    Log.e(tag, String.format(Locale.ENGLISH, "Permission not granted [ %d ]", requestCode))
+                }
+            }
+        }
     }
 
 
