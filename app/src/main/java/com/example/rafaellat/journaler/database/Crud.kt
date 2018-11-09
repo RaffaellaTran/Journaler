@@ -9,22 +9,22 @@ interface Crud<T> where T : DbModel {
     /**
      * Returns the ID of inserted item.
      */
-    fun insert(what: T): Long
+    fun insert(what: T): Boolean
 
     /**
      * Returns the list of inserted IDs.
      */
-    fun insert(what: Collection<T>): List<Long>
+    fun insert(what: Collection<T>): Boolean
 
     /**
      * Returns the number of updated items.
      */
-    fun update(what: T): Int
+    fun update(what: T): Boolean
 
     /**
      * Returns the number of updated items.
      */
-    fun update(what: Collection<T>): Int
+    fun update(what: Collection<T>): Boolean
 
     /**
      * Returns the number of deleted items.
@@ -45,6 +45,7 @@ interface Crud<T> where T : DbModel {
      * Returns the list of items.
      */
     fun select(args: Collection<Pair<String, String>>): List<T>
+
     /**
      * Return the list of items
      */

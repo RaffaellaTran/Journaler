@@ -2,10 +2,12 @@ package com.example.rafaellat.journaler.fragment
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.support.design.widget.FloatingActionButton
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,6 +15,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.BounceInterpolator
+import android.widget.ListView
 import com.example.rafaellat.journaler.R
 import com.example.rafaellat.journaler.activity.NoteActivity
 import com.example.rafaellat.journaler.activity.TodoActivity
@@ -31,7 +34,7 @@ class ItemsFragment : BaseFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val view = inflater.inflate(getLayout(), container, false)
-        val btn = view?.findViewById<FloatingActionButton>(R.id.new_item)
+        val btn = view?.findViewById(R.id.new_item) as FloatingActionButton
 
         btn?.setOnClickListener {
 
@@ -150,5 +153,19 @@ class ItemsFragment : BaseFragment() {
         startActivityForResult(intent, TODO_REQUEST)
     }
 
+    @SuppressLint("ResourceAsColor")
+    override fun onResume() {
+        super.onResume()
+        val items = view?.findViewById<ListView>(R.id.items)
+        items?.let {
+            // two methods for using the method for changing the background color
+            // items.postDelayed({
+            Handler().postDelayed({
+                if (!activity!!.isFinishing) {
+                    items.setBackgroundColor(R.color.grey_text_middle)
+                }
+            }, 3000)
+        }
+    }
 
 }

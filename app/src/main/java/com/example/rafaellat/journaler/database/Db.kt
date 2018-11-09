@@ -7,20 +7,18 @@ import com.example.rafaellat.journaler.model.Note
 import com.example.rafaellat.journaler.model.Todo
 
 
-object Db{
+object Db {
 
     private val tag = "Db"
     private val version = 1
     private val name = "students"
 
     val NOTE = object : Crud<Note> {
-        override fun insert(what: Note): Long {
-            val inserted = insert(listOf(what))
-            if (!inserted.isEmpty()) return inserted[0]
-            return 0
+        override fun insert(what: Note): Boolean {
+            return insert(listOf(what))
         }
 
-        override fun insert(what: Collection<Note>): List<Long> {
+        override fun insert(what: Collection<Note>): Boolean {
             val db = DbHelper(name, version).writableDatabase
             db.beginTransaction()
             var inserted = 0
@@ -47,12 +45,14 @@ object Db{
             }
             db.endTransaction()
             db.close()
-            return items
+            return success
         }
 
-        override fun update(what: Note) = update(listOf(what))
+        override fun update(what: Note): Boolean {
+            return update(listOf(what))
+        }
 
-        override fun update(what: Collection<Note>): Int {
+        override fun update(what: Collection<Note>): Boolean {
             val db = DbHelper(name, version).writableDatabase
             db.beginTransaction()
             var updated = 0
@@ -83,7 +83,7 @@ object Db{
             }
             db.endTransaction()
             db.close()
-            return updated
+            return result
         }
 
         override fun delete(what: Note): Int = delete(listOf(what))
@@ -200,13 +200,11 @@ object Db{
     }
 
     val TODO = object : Crud<Todo> {
-        override fun insert(what: Todo): Long {
-            val inserted = insert(listOf(what))
-            if (!inserted.isEmpty()) return inserted[0]
-            return 0
+        override fun insert(what: Todo): Boolean {
+            return insert(listOf(what))
         }
 
-        override fun insert(what: Collection<Todo>): List<Long> {
+        override fun insert(what: Collection<Todo>): Boolean {
             val db = DbHelper(name, version).writableDatabase
             db.beginTransaction()
             var inserted = 0
@@ -240,12 +238,14 @@ object Db{
             }
             db.endTransaction()
             db.close()
-            return items
+            return success
         }
 
-        override fun update(what: Todo): Int = update(listOf(what))
+        override fun update(what: Todo): Boolean {
+            return update(listOf(what))
+        }
 
-        override fun update(what: Collection<Todo>): Int {
+        override fun update(what: Collection<Todo>): Boolean {
             val db = DbHelper(name, version).writableDatabase
             db.beginTransaction()
             var updated = 0
@@ -277,7 +277,7 @@ object Db{
             }
             db.endTransaction()
             db.close()
-            return updated
+            return result
         }
 
         override fun delete(what: Todo): Int = delete(listOf(what))

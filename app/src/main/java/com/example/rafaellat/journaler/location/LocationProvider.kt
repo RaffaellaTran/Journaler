@@ -96,7 +96,7 @@ object LocationProvider {
     }
 
     // LocationListener concretization that will notify all subscribed third parties about location events
-   private fun turnOffLocationListening() {
+    private fun turnOffLocationListening() {
         Log.v(tag, "We are about to turn off location listening.")
         val ctx = Journaler.ctx
         if (ctx != null) {
@@ -118,17 +118,22 @@ object LocationProvider {
             Log.v(tag, "We are about to check location permissions.")
 
             val permissionsOk =
-                ActivityCompat.checkSelfPermission(ctx,
-                    Manifest.permission.ACCESS_FINE_LOCATION) ==
+                ActivityCompat.checkSelfPermission(
+                    ctx,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) ==
                         PackageManager.PERMISSION_GRANTED
                         &&
-                        ActivityCompat.checkSelfPermission(ctx,
-                            Manifest.permission.ACCESS_COARSE_LOCATION) ==
+                        ActivityCompat.checkSelfPermission(
+                            ctx,
+                            Manifest.permission.ACCESS_COARSE_LOCATION
+                        ) ==
                         PackageManager.PERMISSION_GRANTED
 
             if (!permissionsOk) {
                 throw IllegalStateException(
-                    "Permissions required [ ACCESS_FINE_LOCATION ][ ACCESS_COARSE_LOCATION ]")
+                    "Permissions required [ ACCESS_FINE_LOCATION ][ ACCESS_COARSE_LOCATION ]"
+                )
             }
             Log.v(tag, "Location permissions are ok. We are about to request location changes.")
             val locationManager = ctx.getSystemService(Context.LOCATION_SERVICE) as LocationManager
@@ -149,6 +154,7 @@ object LocationProvider {
             Log.e(tag, "No application context available.")
         }
     }
+
     //responsible for unsubscribing in location updates to interested third parties
     private fun doUnsubscribe(listener: LocationListener): Boolean {
         val iterator = listeners.iterator()
@@ -178,8 +184,10 @@ object LocationProvider {
                 if (!success) {
                     Log.w(tag, "Couldn't un subscribe, subscribers count: " + listeners.size)
                 } else {
-                    Log.v(tag, "Un subscribed, subscribers count: " +
-                            listeners.size)
+                    Log.v(
+                        tag, "Un subscribed, subscribers count: " +
+                                listeners.size
+                    )
                 }
                 if (result) {
                     result = success
