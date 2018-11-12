@@ -1,7 +1,10 @@
 package com.example.rafaellat.journaler.activity
 
 
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.location.Location
 import android.location.LocationListener
 import android.os.*
@@ -11,6 +14,7 @@ import android.text.TextUtils
 import android.text.TextWatcher
 import android.util.Log
 import com.example.rafaellat.journaler.R
+import com.example.rafaellat.journaler.database.Crud
 import com.example.rafaellat.journaler.execution.TaskExecutor
 import com.example.rafaellat.journaler.location.LocationProvider
 import com.example.rafaellat.journaler.model.MODE
@@ -33,6 +37,16 @@ class NoteActivity : ItemActivity() {
     private val threadPoolExecutor = ThreadPoolExecutor(
         3, 3, 1, TimeUnit.SECONDS, LinkedBlockingDeque<Runnable>()
     )
+
+    //it reconnected the original sendmessage() method with the CRUD operation result.
+    private val crudOperationListener = object : BroadcastReceiver(){
+        override fun onReceive(context: Context?, intent: Intent?) {
+            intent?.let {
+                val crudResultValue = intent.getIntExtra(MODE.EXTRAS_KEY, 0)
+                sendMessage(crudResultValue == 1)
+            }
+        }
+    }
 
     private class TryAsync(val identifier: String) : AsyncTask<Unit, Int, Unit>() {
         private val tag = "TryAsync"
@@ -84,6 +98,15 @@ class NoteActivity : ItemActivity() {
                 super.handleMessage(msg)
             }
         }
+        note_title.addTextChangedListener(textWatcher)
+        note_content.addTextChangedListener(textWatcher)
+        val intentFiler = IntentFilter(Crud.BROADCAST_ACTION)
+        registerReceiver(crudOperationListener, intentFiler)
+    }
+
+    override fun onDestroy() {
+        unregisterReceiver(crudOperationListener)
+        super.onDestroy()
     }
 
     //listener assigned to EditText view and on each change the proper update method will be triggered
@@ -137,6 +160,7 @@ class NoteActivity : ItemActivity() {
     }
 
     private fun sendMessage(result: Boolean) {
+        Log.v(tag, "Crud operation result [$result]")
         val msg = handler?.obtainMessage()
         if (result) {
             msg?.arg1 = 1

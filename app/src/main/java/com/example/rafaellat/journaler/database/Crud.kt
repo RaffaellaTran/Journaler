@@ -2,7 +2,7 @@ package com.example.rafaellat.journaler.database
 
 import com.example.rafaellat.journaler.model.Note
 
-interface Crud<T> where T : DbModel {
+interface Crud<T> {
     companion object {
         val BROADCAST_ACTION = "com.journaler.broadcast.crud"
         val BROADCAST_EXTRAS_KEY_CRUD_OPERATION_RESULT = "crud_result"

@@ -3,11 +3,12 @@ package com.example.rafaellat.journaler.service
 import android.app.IntentService
 import android.content.Intent
 import android.util.Log
+import com.example.rafaellat.journaler.database.Crud
 import com.example.rafaellat.journaler.database.Db
 import com.example.rafaellat.journaler.model.MODE
 import com.example.rafaellat.journaler.model.Note
 
-class DatabaseService: IntentService("DatabaseService") {
+class DatabaseService : IntentService("DatabaseService") {
 
     companion object {
         val EXTRA_ENTRY = "entry"
@@ -18,17 +19,17 @@ class DatabaseService: IntentService("DatabaseService") {
 
     override fun onCreate() {
         super.onCreate()
-        Log.v (tag, "[ ON CREATE ]")
+        Log.v(tag, "[ ON CREATE ]")
     }
 
     override fun onLowMemory() {
         super.onLowMemory()
-        Log.v (tag, "[ ON LOW MEMORY ]")
+        Log.v(tag, "[ ON LOW MEMORY ]")
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.v (tag, "[ ON DESTROY ]")
+        Log.v(tag, "[ ON DESTROY ]")
     }
 
     override fun onHandleIntent(p0: Intent?) {
@@ -36,29 +37,43 @@ class DatabaseService: IntentService("DatabaseService") {
             val note = p0.getParcelableExtra<Note>(EXTRA_ENTRY)
             note?.let {
                 val operation = p0.getIntExtra(EXTRA_OPERATION, -1)
-                when (operation){
+                when (operation) {
                     MODE.CREATE.mode -> {
                         val result = Db.insert(note)
-                        if (result){
-                            Log.v (tag, "Note inserted.")
+                        if (result) {
+                            Log.v(tag, "Note inserted.")
                         } else {
-                            Log.v (tag, "Note not inserted.")
+                            Log.v(tag, "Note not inserted.")
                         }
+                        broadcastResult(result)
                     }
                     MODE.EDIT.mode -> {
                         val result = Db.update(note)
-                        if (result){
-                            Log.v (tag, "Note inserted.")
+                        if (result) {
+                            Log.v(tag, "Note inserted.")
                         } else {
-                            Log.v (tag, "Note not inserted.")
+                            Log.v(tag, "Note not inserted.")
                         }
+                        broadcastResult(result)
                     }
-                    else ->{
+                    else -> {
                         Log.w(tag, "Unknown mode [$operation]")
                     }
                 }
             }
         }
+    }
+
+    private fun broadcastResult(result: Boolean) {
+        val intent = Intent()
+        intent.putExtra(
+            Crud.BROADCAST_EXTRAS_KEY_CRUD_OPERATION_RESULT,
+            if (result) {
+                1
+            } else {
+                0
+            }
+        )
     }
 }
 

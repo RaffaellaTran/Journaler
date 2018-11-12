@@ -118,6 +118,9 @@ class MainActivity : BaseActivity() {
         val pagerPosition = preferences.getInt(keyPagePosition, 0)
         pager.setCurrentItem(pagerPosition, true)
 
+        val serviceIntent= Intent(this, MainService::class.java)
+        startService(serviceIntent)
+
     }
 
     private class ViewPagerAdapter(manager: FragmentManager) : FragmentStatePagerAdapter(manager) {
