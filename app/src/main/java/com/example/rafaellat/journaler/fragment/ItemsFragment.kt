@@ -36,7 +36,7 @@ class ItemsFragment : BaseFragment() {
         val view = inflater.inflate(getLayout(), container, false)
         val btn = view?.findViewById(R.id.new_item) as FloatingActionButton
 
-        btn?.setOnClickListener {
+        btn.setOnClickListener {
 
             animate(btn)
 

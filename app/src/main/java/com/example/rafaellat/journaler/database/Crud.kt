@@ -1,5 +1,7 @@
 package com.example.rafaellat.journaler.database
 
+import com.example.rafaellat.journaler.model.Note
+
 interface Crud<T> where T : DbModel {
     companion object {
         val BROADCAST_ACTION = "com.journaler.broadcast.crud"
@@ -29,12 +31,12 @@ interface Crud<T> where T : DbModel {
     /**
      * Returns the number of deleted items.
      */
-    fun delete(what: T): Int
+    fun delete(what: T): Boolean
 
     /**
      * Returns the number of deleted items.
      */
-    fun delete(what: Collection<T>): Int
+    fun delete(what: Collection<T>): Boolean
 
     /**
      * Returns the list of items.
@@ -50,4 +52,5 @@ interface Crud<T> where T : DbModel {
      * Return the list of items
      */
     fun selectAll(): List<T>
+
 }

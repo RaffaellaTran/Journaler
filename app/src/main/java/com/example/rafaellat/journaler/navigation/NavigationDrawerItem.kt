@@ -4,5 +4,6 @@ import android.content.Context
 
 data class NavigationDrawerItem(
     val title: String,
-    val onClick: Runnable
+    val onClick: Runnable,
+    var enabled: Boolean= true
 )

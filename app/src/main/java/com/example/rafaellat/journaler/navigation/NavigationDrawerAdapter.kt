@@ -1,6 +1,7 @@
 package com.example.rafaellat.journaler.navigation
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,13 +12,16 @@ import com.example.rafaellat.journaler.R
 
 class NavigationDrawerAdapter( val ctx: Context, val items: List<NavigationDrawerItem>): BaseAdapter() {
 
-    //This class shown here extends Android's BaseAdapter and overrides methods needed for the adapter to provide view
+    //This class extends Android's BaseAdapter and overrides methods needed for the adapter to provide view
     // instances. All views that the adapter creates will be assigned to expand ListView in our navigation drawer.
+
+    private val tag = "Nav. drw. adptr."
 
     override fun getView(position: Int, v: View?, group: ViewGroup?):
             View {
         val inflater = LayoutInflater.from(ctx)
         var view = v
+
         if (view == null) {
             view = inflater.inflate(
                 R.layout.adapter_navigation_drawer, null
@@ -28,7 +32,12 @@ class NavigationDrawerAdapter( val ctx: Context, val items: List<NavigationDrawe
         val title = view.findViewById<Button>(R.id.drawer_item)
         title.text = item.title
         title.setOnClickListener {
-            item.onClick.run()  }
+            if(item.enabled){
+            item.onClick.run() }
+        else {
+                Log.w(tag, "Item is disabled: $item")
+            }
+        }
 
         return view
     }

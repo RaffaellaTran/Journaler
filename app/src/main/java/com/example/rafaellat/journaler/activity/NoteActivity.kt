@@ -1,6 +1,7 @@
 package com.example.rafaellat.journaler.activity
 
 
+import android.content.Intent
 import android.location.Location
 import android.location.LocationListener
 import android.os.*
@@ -10,10 +11,11 @@ import android.text.TextUtils
 import android.text.TextWatcher
 import android.util.Log
 import com.example.rafaellat.journaler.R
-import com.example.rafaellat.journaler.database.Db
 import com.example.rafaellat.journaler.execution.TaskExecutor
 import com.example.rafaellat.journaler.location.LocationProvider
+import com.example.rafaellat.journaler.model.MODE
 import com.example.rafaellat.journaler.model.Note
+import com.example.rafaellat.journaler.service.DatabaseService
 import kotlinx.android.synthetic.main.activity_note.*
 import java.util.concurrent.LinkedBlockingDeque
 import java.util.concurrent.ThreadPoolExecutor
@@ -88,19 +90,18 @@ class NoteActivity : ItemActivity() {
     private val textWatcher = object : TextWatcher {
 
         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-//            if (note == null) {
-//                val title = getNoteTitle()
-//                val content = getNoteContent()
-//                val location = location
-//                note = Note("", content, location)
-//           }
+            if (note == null) {
+                val title = getNoteTitle()
+                val content = getNoteContent()
+                val location = location
+                note = Note("", content, location)
+           }
         }
 
         override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            p0.let {
-                tryAsync(p0.toString())
-            }
+            tryAsync(p0.toString())
         }
+
         override fun afterTextChanged(p0: Editable?) {
             Log.d(tag, p0.toString())
             updateNote()
@@ -121,30 +122,12 @@ class NoteActivity : ItemActivity() {
                 val content = getNoteContent()
                 note = Note(title, content, p0)
 
-                executor.execute {
-                    val param = note
-                    var result = false
-                    param?.let {
-                        result = Db.NOTE.insert(param)
-                    }
-                    if (result) {
-                        Log.i(tag, "Note inserted.")
-                    } else {
-                        Log.e(tag, "Note not inserted.")
-                    }
-
-                    handler?.post {
-                        var color = R.color.vermilion
-                        if (result) {
-                            color = R.color.green
-                        }
-                        indicator.setBackgroundColor(ContextCompat.getColor(this@NoteActivity, color))
-                    }
-                    sendMessage(result)
-
-
-                }
-
+                //switch to intent service
+                val dbIntent = Intent(this@NoteActivity, DatabaseService::class.java)
+                dbIntent.putExtra(DatabaseService.EXTRA_ENTRY, note)
+                dbIntent.putExtra(DatabaseService.EXTRA_OPERATION, MODE.CREATE.mode)
+                startService(dbIntent)
+                sendMessage(true)
             }
         }
 
@@ -171,29 +154,13 @@ class NoteActivity : ItemActivity() {
         } else {
             note?.title = getNoteTitle()
             note?.message = getNoteContent()
-            executor.execute {
-                val param = note
-                var result = false
-                param?.let {
-                    result = Db.NOTE.update(param)
-                }
-                if (result) {
-                    Log.i(tag, "Note updated.")
-                } else {
-                    Log.e(tag, "Note not updated.")
 
-                }
-                executor.execute {
-                    handler?.post {
-                        var color = R.color.vermilion
-                        if (result) {
-                            color = R.color.green
-                        }
-                        indicator.setBackgroundColor(ContextCompat.getColor(this@NoteActivity, color))
-                    }
-                    sendMessage(result)
-                }
-            }
+            //Switching to intent service
+            val dbIntent = Intent(this@NoteActivity, DatabaseService::class.java)
+            dbIntent.putExtra(DatabaseService.EXTRA_ENTRY, note)
+            dbIntent.putExtra(DatabaseService.EXTRA_OPERATION, MODE.CREATE.mode)
+            startService(dbIntent)
+            sendMessage(true)
         }
     }
 
@@ -204,6 +171,4 @@ class NoteActivity : ItemActivity() {
     private fun getNoteTitle(): String {
         return note_title.text.toString()
     }
-
-
 }

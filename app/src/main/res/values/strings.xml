@@ -12,5 +12,6 @@
     <string name="lorem_ipsum_sit_dolore">lorem ipsum sit dolore</string>
     <string name="menu">menu</string>
     <string name="choose_a_type">Choose a type:</string>
+    <string name="synchronize">synchronize</string>
 
 </resources>
