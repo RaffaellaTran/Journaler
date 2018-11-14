@@ -1,10 +1,7 @@
 package com.example.rafaellat.journaler.activity
 
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
+import android.content.*
 import android.location.Location
 import android.location.LocationListener
 import android.os.*
@@ -13,6 +10,8 @@ import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.util.Log
+import android.view.DragEvent
+import android.view.View
 import com.example.rafaellat.journaler.R
 import com.example.rafaellat.journaler.database.Crud
 import com.example.rafaellat.journaler.execution.TaskExecutor
@@ -39,11 +38,11 @@ class NoteActivity : ItemActivity() {
     )
 
     //it reconnected the original sendmessage() method with the CRUD operation result.
-    private val crudOperationListener = object : BroadcastReceiver(){
+    private val crudOperationListener = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             intent?.let {
                 val crudResultValue = intent.getIntExtra(MODE.EXTRAS_KEY, 0)
-                sendMessage(crudResultValue == 1)
+             //   sendMessage(crudResultValue == 1)
             }
         }
     }
@@ -102,7 +101,10 @@ class NoteActivity : ItemActivity() {
         note_content.addTextChangedListener(textWatcher)
         val intentFiler = IntentFilter(Crud.BROADCAST_ACTION)
         registerReceiver(crudOperationListener, intentFiler)
+
     }
+
+
 
     override fun onDestroy() {
         unregisterReceiver(crudOperationListener)
@@ -118,11 +120,11 @@ class NoteActivity : ItemActivity() {
                 val content = getNoteContent()
                 val location = location
                 note = Note("", content, location)
-           }
+            }
         }
 
         override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            tryAsync(p0.toString())
+            //  tryAsync(p0.toString())
         }
 
         override fun afterTextChanged(p0: Editable?) {
@@ -184,7 +186,11 @@ class NoteActivity : ItemActivity() {
             dbIntent.putExtra(DatabaseService.EXTRA_ENTRY, note)
             dbIntent.putExtra(DatabaseService.EXTRA_OPERATION, MODE.CREATE.mode)
             startService(dbIntent)
-            sendMessage(true)
+
+                    sendMessage(getNoteContent().isNotEmpty() && getNoteTitle().isNotEmpty())
+
+
+            Log.d(tag, "UPDATE NOTE")
         }
     }
 

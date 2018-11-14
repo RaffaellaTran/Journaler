@@ -6,29 +6,74 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
+import android.database.Cursor
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.support.design.widget.FloatingActionButton
+import android.support.v4.app.LoaderManager
+import android.support.v4.content.CursorLoader
+import android.support.v4.content.Loader
 import android.util.Log
+import android.view.DragEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.BounceInterpolator
 import android.widget.ListView
+import com.example.rafaellat.journaler.Journaler
 import com.example.rafaellat.journaler.R
 import com.example.rafaellat.journaler.activity.NoteActivity
 import com.example.rafaellat.journaler.activity.TodoActivity
+import com.example.rafaellat.journaler.adapter.EntryAdapter
+import com.example.rafaellat.journaler.database.Content
+import com.example.rafaellat.journaler.execution.TaskExecutor
 import com.example.rafaellat.journaler.model.MODE
+import com.example.rafaellat.journaler.provider.JournalerProvider
+import kotlinx.android.synthetic.main.fragment_items.*
 import java.text.SimpleDateFormat
 import java.util.*
 
 class ItemsFragment : BaseFragment() {
     private val TODO_REQUEST = 1
     private val NOTE_REQUEST = 0
+    private var adapter : EntryAdapter? = null
     override val logTag: String = "Item fragment"
+    val executor = TaskExecutor.getInstance(5)
+
+    private val loaderCallback= object : LoaderManager.LoaderCallbacks<Cursor>{
+        // instantiates and returns a new loader instance for the ID we provided
+        override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
+            return CursorLoader(this@ItemsFragment.context!!, Uri.parse(JournalerProvider.URL_NOTE), null, null, null, null)
+        }
+
+        //created when a previously created loader has finished loading
+        override fun onLoadFinished(loader: Loader<Cursor>, cursor: Cursor?) {
+           cursor?.let {
+               if(adapter == null){
+                   adapter = EntryAdapter(this@ItemsFragment.context!!, cursor)
+                    items.adapter = adapter
+               }
+               else{
+                   adapter?.swapCursor(cursor)
+               }
+           }
+        }
+
+        override fun onLoaderReset(loader: Loader<Cursor>) {
+            adapter?.swapCursor(null)
+        }
+
+    }
+
     override fun getLayout(): Int {
         return R.layout.fragment_items
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        loaderManager.initLoader(0, null, loaderCallback) // ensures a loader is initialized and active
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -154,18 +199,51 @@ class ItemsFragment : BaseFragment() {
     }
 
     @SuppressLint("ResourceAsColor")
+
+    private val dragListener = View.OnDragListener {
+            view, event ->
+        val tag = "Drag and drop"
+        event?.let {
+            when (event.action) {
+                DragEvent.ACTION_DRAG_STARTED -> {
+                    Log.d(tag, "ACTION_DRAG_STARTED")
+                }
+                DragEvent.ACTION_DRAG_ENDED -> {
+                    Log.d(tag, "ACTION_DRAG_ENDED")
+                }
+                DragEvent.ACTION_DRAG_ENTERED -> {
+                    Log.d(tag, "ACTION_DRAG_ENDED")
+                }
+                DragEvent.ACTION_DRAG_EXITED -> {
+                    Log.d(tag, "ACTION_DRAG_ENDED")
+                }
+                else -> {
+                    Log.d(tag, "ACTION_DRAG_ ELSE ...")
+                }
+            }
+        }
+        true
+    }
+
     override fun onResume() {
         super.onResume()
-        val items = view?.findViewById<ListView>(R.id.items)
-        items?.let {
-            // two methods for using the method for changing the background color
-            // items.postDelayed({
-            Handler().postDelayed({
-                if (!activity!!.isFinishing) {
-                    items.setBackgroundColor(R.color.grey_text_middle)
-                }
-            }, 3000)
+        loaderManager.restartLoader(0, null, loaderCallback) // start a new or a restarts an existing loader instance
+
+        val btn = view?.findViewById<FloatingActionButton>(R.id.new_item)
+        btn?.let {
+            animate(btn, false)
         }
+        btn?.setOnDragListener(dragListener)
+
+//        executor.execute {
+//            val notes = Content.NOTE.selectAll()
+//            val adapter = EntryAdapter(activity, notes)
+//            activity!!.runOnUiThread {
+//                view?.findViewById<ListView>(R.id.items)?.adapter = adapter
+//            }
+//        }
+
+
     }
 
 }

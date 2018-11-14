@@ -1,9 +1,13 @@
 package com.example.rafaellat.journaler.activity
 
+import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.location.Location
+import android.net.Uri
+import android.os.AsyncTask
 import android.os.Bundle
 import android.os.IBinder
 import android.support.v4.app.Fragment
@@ -21,6 +25,8 @@ import com.example.rafaellat.journaler.navigation.NavigationDrawerItem
 import com.example.rafaellat.journaler.preferences.PreferencesConfiguration
 import com.example.rafaellat.journaler.preferences.PreferencesProvider
 import com.example.rafaellat.journaler.service.MainService
+import com.github.salomonbrys.kotson.fromJson
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity() {
@@ -34,7 +40,7 @@ class MainActivity : BaseActivity() {
     private val keyPagePosition = "keyPagePosition"
 
     private var service: MainService? = null
-
+    private val gson = Gson()
     private val synchronize: NavigationDrawerItem by lazy {
         NavigationDrawerItem(
             getString(R.string.synchronize), Runnable { service?.synchronize() },

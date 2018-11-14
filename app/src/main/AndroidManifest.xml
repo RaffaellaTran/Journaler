@@ -28,6 +28,11 @@
                 android:name=".service.DatabaseService"
                 android:exported="false"/>
 
+        <provider
+                android:authorities="com.example.rafaellat.journaler.provider"
+                android:name=".provider.JournalerProvider"
+                android:exported="true"/>
+
         <activity
                 android:name=".activity.MainActivity"
                 android:configChanges="orientation"
@@ -47,9 +52,6 @@
                 android:configChanges="orientation"
                 android:screenOrientation="portrait"/>
 
-        <service
-                android:name=".service.MainService"
-                android:exported="false"/>
         <receiver
                 android:name=".receiver.BootReceiver"
                 android:enabled="true"

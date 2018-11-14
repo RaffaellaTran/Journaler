@@ -45,6 +45,9 @@ android {
             versionNameSuffix "-special"
         }
     }
+    dataBinding{
+        enabled = true
+    }
 }
 
 dependencies {
@@ -58,6 +61,19 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
     implementation 'com.squareup.okhttp3:okhttp:3.11.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
+    
+    // Backend and API
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.11.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
+
+    //Gson and Kotson
+    implementation 'com.google.code.gson:gson:2.8.2'
+    implementation 'com.github.salomonbrys.kotson:kotson:2.3.0'
+
+    kapt 'com.android.databinding: compiler:2.3.1'
+    
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
