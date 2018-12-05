@@ -1,0 +1,50 @@
+{
+  "authenticate": [
+    {
+      "id": 1,
+      "username": "username",
+      "password": "password"
+    }
+  ],
+  "notes": [
+    { 
+      "id": 1,
+      "title": "Test note 1",
+      "message": "Test message 1",
+      "location": {
+           "latitude": 10000,
+           "longitude": 10000
+      }
+    },
+    {
+      "id": 2,
+      "title": "Test note 2",
+      "message": "Test message 2",
+      "location": {
+           "latitude": 10000,
+           "longitude": 10000
+      }
+    },
+    {
+      "id": 3,
+      "title": "Test note 3",
+      "message": "Test message 3",
+      "location": {
+           "latitude": 10000,
+           "longitude": 10000
+      }
+    },
+    {
+      "id": 4,
+      "title": "Test note 4",
+      "message": "Test message 4",
+      "location": {
+           "latitude": 10000,
+           "longitude": 10000
+      }
+    }
+  ],
+  "todos": {
+    "name": "typicode"
+  }
+}
