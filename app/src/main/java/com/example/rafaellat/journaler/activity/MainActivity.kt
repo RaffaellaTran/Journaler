@@ -1,23 +1,18 @@
 package com.example.rafaellat.journaler.activity
 
-import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
-import android.location.Location
-import android.net.Uri
-import android.os.AsyncTask
 import android.os.Bundle
 import android.os.IBinder
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentStatePagerAdapter
-import android.support.v4.view.GravityCompat
-import android.support.v4.view.ViewPager
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.core.view.GravityCompat
+import androidx.viewpager.widget.ViewPager
 import android.util.Log
 import android.view.MenuItem
-
 import com.example.rafaellat.journaler.R
 import com.example.rafaellat.journaler.fragment.ItemsFragment
 import com.example.rafaellat.journaler.navigation.NavigationDrawerAdapter
@@ -25,7 +20,6 @@ import com.example.rafaellat.journaler.navigation.NavigationDrawerItem
 import com.example.rafaellat.journaler.preferences.PreferencesConfiguration
 import com.example.rafaellat.journaler.preferences.PreferencesProvider
 import com.example.rafaellat.journaler.service.MainService
-import com.github.salomonbrys.kotson.fromJson
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -67,26 +61,33 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         pager.adapter = ViewPagerAdapter(supportFragmentManager)
+
         val menuItems = mutableListOf<NavigationDrawerItem>()
-        val today = NavigationDrawerItem(
-            getString(R.string.today),
-            Runnable { pager.setCurrentItem(0, true) }
-        )
-        val next7Days = NavigationDrawerItem(
-            getString(R.string.next_seven_days),
-            Runnable { pager.setCurrentItem(1, true) }
-        )
+
         val todos = NavigationDrawerItem(
             getString(R.string.todos),
-            Runnable { pager.setCurrentItem(2, true) }
+            Runnable { pager.setCurrentItem(1, true) }
         )
         val notes = NavigationDrawerItem(
             getString(R.string.notes),
-            Runnable { pager.setCurrentItem(3, true) }
+            Runnable {
+                pager.setCurrentItem(2, true) }
         )
 
-        menuItems.add(today)
-        menuItems.add(next7Days)
+        when(pager.currentItem){
+            1 -> {
+                val intent= Intent(this, NoteActivity::class.java)
+                startActivity(intent)
+            }
+            2 -> {
+                val intent= Intent(this, NoteActivity::class.java)
+                startActivity(intent)
+            }
+            else ->{
+                Log.d(tag, "empty")
+            }
+        }
+
         menuItems.add(todos)
         menuItems.add(notes)
         menuItems.add(synchronize)
@@ -103,7 +104,7 @@ class MainActivity : BaseActivity() {
         val preferences = provider.obtain(config, this)
 
         pager.adapter = ViewPagerAdapter(supportFragmentManager)
-        pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+        pager.addOnPageChangeListener(object : androidx.viewpager.widget.ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {
                 // Ignore
             }
@@ -124,13 +125,13 @@ class MainActivity : BaseActivity() {
         val pagerPosition = preferences.getInt(keyPagePosition, 0)
         pager.setCurrentItem(pagerPosition, true)
 
-        val serviceIntent= Intent(this, MainService::class.java)
+        val serviceIntent = Intent(this, MainService::class.java)
         startService(serviceIntent)
 
     }
 
-    private class ViewPagerAdapter(manager: FragmentManager) : FragmentStatePagerAdapter(manager) {
-        override fun getItem(position: Int): Fragment {
+    private class ViewPagerAdapter(manager: androidx.fragment.app.FragmentManager) : androidx.fragment.app.FragmentStatePagerAdapter(manager) {
+        override fun getItem(position: Int): androidx.fragment.app.Fragment {
             return ItemsFragment()
         }
 
@@ -143,15 +144,17 @@ class MainActivity : BaseActivity() {
         when (item.itemId) {
             R.id.drawing_menu -> {
                 drawer_layout.openDrawer(GravityCompat.START)
+
                 return true
             }
-            R.id.options_menu -> {
-                Log.v(tag, "Options menu.")
-                return true
-            }
+//            R.id.options_menu -> {
+//                Log.v(tag, "Options menu.")
+//                return true
+//            }
             else -> return super.onOptionsItemSelected(item)
         }
     }
+
 
     override fun onResume() {
         super.onResume()

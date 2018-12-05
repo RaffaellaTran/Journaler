@@ -13,25 +13,25 @@ interface JournalerBackendService {
         }
     }
 
-    @POST("authenticate")
+    @POST("RaffaellaTran/Journaler/authenticate")
     fun login(@HeaderMap headers: Map<String, String>, @Body payload: UserLoginRequest): Call<JournalerApiToken>
 
-    @GET("notes")
+    @GET("RaffaellaTran/Journaler/notes")
     fun getNotes(@HeaderMap headers: Map<String, String>): Call<List<Note>>
 
-    @GET("todos")
+    @GET("RaffaellaTran/Journaler/todos")
     fun getTodos(@HeaderMap headers: Map<String, String>): Call<List<Todo>>
 
-    @PUT("notes")
+    @PUT("RaffaellaTran/Journaler/notes")
     fun publishNotes(@HeaderMap headers: Map<String, String>,@Body payload:List<Note> ): Call<Unit>
 
-    @PUT("todos")
+    @PUT("RaffaellaTran/Journaler/todos")
     fun publishTodos(@HeaderMap headers: Map<String, String>,@Body payload:List<Todo> ): Call<Unit>
 
-    @DELETE("notes")
+    @DELETE("RaffaellaTran/Journaler/notes")
     fun removeNotes(@HeaderMap headers: Map<String, String>,@Body payload:List<Note> ): Call<Unit>
 
-    @DELETE("todos")
+    @DELETE("RaffaellaTran/Journaler/todos")
     fun removeTodos(@HeaderMap headers: Map<String, String>,@Body payload:List<Todo> ): Call<Unit>
 
 }

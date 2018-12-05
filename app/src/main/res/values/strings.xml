@@ -13,5 +13,6 @@
     <string name="menu">menu</string>
     <string name="choose_a_type">Choose a type:</string>
     <string name="synchronize">synchronize</string>
+    <string name="jounaler">Jounaler</string>
 
 </resources>

@@ -1,17 +1,19 @@
 package com.example.rafaellat.journaler.activity
 
 
-import android.content.*
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.location.Location
 import android.location.LocationListener
 import android.os.*
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.util.Log
-import android.view.DragEvent
-import android.view.View
+import android.widget.Toast
 import com.example.rafaellat.journaler.R
 import com.example.rafaellat.journaler.database.Crud
 import com.example.rafaellat.journaler.execution.TaskExecutor
@@ -20,6 +22,7 @@ import com.example.rafaellat.journaler.model.MODE
 import com.example.rafaellat.journaler.model.Note
 import com.example.rafaellat.journaler.service.DatabaseService
 import kotlinx.android.synthetic.main.activity_note.*
+import kotlinx.android.synthetic.main.adapter_entry.*
 import java.util.concurrent.LinkedBlockingDeque
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
@@ -31,6 +34,7 @@ class NoteActivity : ItemActivity() {
     override fun getLayout() = R.layout.activity_note
     private val executor = TaskExecutor.getInstance(1)
     private var handler: Handler? = null
+    private var color = R.color.vermilion
 
     //AsyncTask
     private val threadPoolExecutor = ThreadPoolExecutor(
@@ -42,7 +46,7 @@ class NoteActivity : ItemActivity() {
         override fun onReceive(context: Context?, intent: Intent?) {
             intent?.let {
                 val crudResultValue = intent.getIntExtra(MODE.EXTRAS_KEY, 0)
-             //   sendMessage(crudResultValue == 1)
+                //   sendMessage(crudResultValue == 1)
             }
         }
     }
@@ -88,7 +92,7 @@ class NoteActivity : ItemActivity() {
         handler = object : Handler(Looper.getMainLooper()) {
             override fun handleMessage(msg: Message?) {
                 msg?.let {
-                    var color = R.color.vermilion
+
                     if (msg.arg1 > 0) {
                         color = R.color.green
                     }
@@ -102,8 +106,16 @@ class NoteActivity : ItemActivity() {
         val intentFiler = IntentFilter(Crud.BROADCAST_ACTION)
         registerReceiver(crudOperationListener, intentFiler)
 
+        confirm_button.setOnClickListener {
+            Log.d(tag, "insert note")
+            if(color == R.color.green){
+                updateNote()
+            }
+            else{
+                Toast.makeText(applicationContext,"Missing data", Toast.LENGTH_LONG).show()
+            }
+        }
     }
-
 
 
     override fun onDestroy() {
@@ -129,7 +141,8 @@ class NoteActivity : ItemActivity() {
 
         override fun afterTextChanged(p0: Editable?) {
             Log.d(tag, p0.toString())
-            updateNote()
+            // updateNote()
+            sendMessage(getNoteContent().isNotEmpty() && getNoteTitle().isNotEmpty())
         }
     }
 
@@ -187,10 +200,8 @@ class NoteActivity : ItemActivity() {
             dbIntent.putExtra(DatabaseService.EXTRA_OPERATION, MODE.CREATE.mode)
             startService(dbIntent)
 
-                    sendMessage(getNoteContent().isNotEmpty() && getNoteTitle().isNotEmpty())
-
-
             Log.d(tag, "UPDATE NOTE")
+            finish()
         }
     }
 

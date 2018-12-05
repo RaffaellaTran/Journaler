@@ -81,6 +81,15 @@ object Content {
 
         override fun delete(what: Note): Int= delete(listOf(what))
 
+        override fun deleteById(id:Long): Int= delete(listOf(findById(id)))
+
+        override fun findById(id: Long): Note {
+
+            val note: Note? = listOf<Note>().find { it.id == id }
+
+            return note!!
+        }
+
         override fun delete(what: Collection<Note>): Int {
             var count = 0
             what.forEach { item ->
@@ -155,10 +164,22 @@ object Content {
             }
             return items
         }
+
+//       override fun getNOTE(){
+//            Log.d(tag, "Test get")
+//        }
     }
 
 
     val TODO = object : Crud<Todo> {
+        override fun deleteById(id: Long): Int {
+            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        }
+
+        override fun findById(id: Long): Note {
+            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        }
+
         override fun insert(what: Todo): Long {
             val inserted = insert(listOf(what))
             if (!inserted.isEmpty()) return inserted[0]
@@ -289,5 +310,9 @@ object Content {
             }
             return items
         }
+
+//        override fun getNOTE(){
+//            Log.d(tag, "Test get")
+//        }
     }
 }

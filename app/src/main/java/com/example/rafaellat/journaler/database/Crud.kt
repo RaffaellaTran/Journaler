@@ -54,4 +54,9 @@ interface Crud<T> {
      */
     fun selectAll(): List<T>
 
+    fun deleteById(id:Long): Int
+
+    fun findById( id: Long): Note
+
+    //fun getNOTE()
 }

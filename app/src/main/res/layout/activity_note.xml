@@ -18,7 +18,7 @@
                 android:background="@color/black_transparent_40"
                 android:orientation="vertical">
 
-            <android.support.v7.widget.Toolbar
+            <androidx.appcompat.widget.Toolbar
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
@@ -48,17 +48,25 @@
                     android:layout_margin="10dp"
                     android:background="@android:color/darker_gray"
                     />
+
         </RelativeLayout>
 
 
         <EditText
                 android:id="@+id/note_content"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:gravity="top"
                 android:hint="@string/your_notes_content_go_here"
                 android:padding="@dimen/form_padding"
                 style="@style/edit_text_gery_text"/>
+
+
+        <Button
+                android:text="Confirm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/confirm_button"/>
 
     </LinearLayout>
 </ScrollView>

@@ -16,7 +16,7 @@ object BackendServiceRetrofit {
         loggingInerceptor.level = HttpLoggingInterceptor.Level.BODY
 
         return Retrofit.Builder()
-            .baseUrl("https://app.fakejson.com/member/") //backend base URL set to local host
+            .baseUrl("https://my-json-server.typicode.com/") //backend base URL set to local host
             .addConverterFactory(GsonConverterFactory.create()) // converter factory as a mechanism for JSON deseralization
             .client(
                 OkHttpClient // create a new OkHttp

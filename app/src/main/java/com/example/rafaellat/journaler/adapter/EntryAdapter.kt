@@ -1,16 +1,14 @@
 package com.example.rafaellat.journaler.adapter
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
 import android.database.Cursor
-import android.support.v4.app.FragmentActivity
+import androidx.fragment.app.FragmentActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
-import android.widget.CursorAdapter
-import android.widget.FrameLayout
-import android.widget.TextView
+import android.widget.*
 import com.example.rafaellat.journaler.Journaler.Companion.ctx
 import com.example.rafaellat.journaler.R
 import com.example.rafaellat.journaler.R.id.items
@@ -31,9 +29,12 @@ class EntryAdapter(ctx: Context, crsr: Cursor): CursorAdapter(ctx, crsr) {
         context?.let{
             val label = view?.findViewById<TextView>(R.id.title)
             label?.text = cursor.getString(cursor.getColumnIndexOrThrow(DbHelper.COLUMN_TITLE))
+            label?.setOnClickListener {
+               Toast.makeText(context, cursor.getString(cursor.getColumnIndexOrThrow(DbHelper.COLUMN_MESSAGE)), Toast.LENGTH_SHORT).show()
+
+            }
         }
     }
-
 
 //
 //    //returns the instance of the populated view based on the current position in the container
