@@ -33,7 +33,8 @@ class NavigationDrawerAdapter( val ctx: Context, val items: List<NavigationDrawe
         title.text = item.title
         title.setOnClickListener {
             if(item.enabled){
-            item.onClick.run() }
+        //    item.onClick.run()
+            }
         else {
                 Log.w(tag, "Item is disabled: $item")
             }

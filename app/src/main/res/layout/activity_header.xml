@@ -16,7 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/activity_title"
-            android:text="Jounaler"/>
+            android:text="@string/jounaler"/>
 
     <Button
             android:layout_width="@dimen/header_height"

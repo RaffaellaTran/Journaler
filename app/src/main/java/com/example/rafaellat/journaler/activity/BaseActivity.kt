@@ -119,11 +119,11 @@ abstract class BaseActivity : PermissionCompatActivity() {
     override fun onResume() {
         super.onResume()
         Log.v(tag, "[ ON RESUME ]")
-        val animation = getAnimation(R.anim.top_to_bottom)
-        findViewById<View>(R.id.toolbar).startAnimation(animation)
+     //   val animation = getAnimation(R.anim.top_to_bottom)
+     //   findViewById<View>(R.id.toolbar).startAnimation(animation)
     }
 
-    fun Activity.getAnimation(animation: Int): Animation = AnimationUtils.loadAnimation(this, animation)
+  //  fun Activity.getAnimation(animation: Int): Animation = AnimationUtils.loadAnimation(this, animation)
 
     override fun onPostResume() {
         super.onPostResume()
@@ -134,8 +134,8 @@ abstract class BaseActivity : PermissionCompatActivity() {
     override fun onPause() {
         super.onPause()
         Log.v(tag, "[ ON PAUSE ]")
-        val animation = getAnimation(R.anim.hide_to_top)
-        findViewById<View>(R.id.toolbar).startAnimation(animation)
+     //   val animation = getAnimation(R.anim.hide_to_top)
+     //   findViewById<View>(R.id.toolbar).startAnimation(animation)
     }
 
     override fun onStop() {

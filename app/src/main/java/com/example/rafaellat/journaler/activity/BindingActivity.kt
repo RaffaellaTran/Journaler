@@ -1,6 +1,6 @@
 package com.example.rafaellat.journaler.activity
 
-import android.databinding.DataBindingUtil
+import androidx.databinding.DataBindingUtil
 import android.location.Location
 import android.os.Bundle
 import com.example.rafaellat.journaler.R

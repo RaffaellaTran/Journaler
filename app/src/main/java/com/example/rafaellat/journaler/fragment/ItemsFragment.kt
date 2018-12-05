@@ -10,10 +10,10 @@ import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
-import android.support.design.widget.FloatingActionButton
-import android.support.v4.app.LoaderManager
-import android.support.v4.content.CursorLoader
-import android.support.v4.content.Loader
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import androidx.loader.app.LoaderManager
+import androidx.loader.content.CursorLoader
+import androidx.loader.content.Loader
 import android.util.Log
 import android.view.DragEvent
 import android.view.LayoutInflater
@@ -42,14 +42,21 @@ class ItemsFragment : BaseFragment() {
     override val logTag: String = "Item fragment"
     val executor = TaskExecutor.getInstance(5)
 
-    private val loaderCallback= object : LoaderManager.LoaderCallbacks<Cursor>{
+    private val loaderCallback= object : androidx.loader.app.LoaderManager.LoaderCallbacks<Cursor>{
         // instantiates and returns a new loader instance for the ID we provided
-        override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
-            return CursorLoader(this@ItemsFragment.context!!, Uri.parse(JournalerProvider.URL_NOTE), null, null, null, null)
+        override fun onCreateLoader(id: Int, args: Bundle?): androidx.loader.content.Loader<Cursor> {
+            return androidx.loader.content.CursorLoader(
+                this@ItemsFragment.context!!,
+                Uri.parse(JournalerProvider.URL_NOTE),
+                null,
+                null,
+                null,
+                null
+            )
         }
 
         //created when a previously created loader has finished loading
-        override fun onLoadFinished(loader: Loader<Cursor>, cursor: Cursor?) {
+        override fun onLoadFinished(loader: androidx.loader.content.Loader<Cursor>, cursor: Cursor?) {
            cursor?.let {
                if(adapter == null){
                    adapter = EntryAdapter(this@ItemsFragment.context!!, cursor)
@@ -61,7 +68,7 @@ class ItemsFragment : BaseFragment() {
            }
         }
 
-        override fun onLoaderReset(loader: Loader<Cursor>) {
+        override fun onLoaderReset(loader: androidx.loader.content.Loader<Cursor>) {
             adapter?.swapCursor(null)
         }
 
@@ -234,16 +241,6 @@ class ItemsFragment : BaseFragment() {
             animate(btn, false)
         }
         btn?.setOnDragListener(dragListener)
-
-//        executor.execute {
-//            val notes = Content.NOTE.selectAll()
-//            val adapter = EntryAdapter(activity, notes)
-//            activity!!.runOnUiThread {
-//                view?.findViewById<ListView>(R.id.items)?.adapter = adapter
-//            }
-//        }
-
-
     }
 
 }
